@@ -24,7 +24,7 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly
+          version: v1.5.1
 
       - name: Show Forge version
         run: forge --version
@@ -85,7 +85,7 @@ jobs:
         if: steps.check_src.outputs.has_contracts == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly
+          version: v1.5.1
 
       - name: Run Slither
         if: steps.check_src.outputs.has_contracts == 'true'
