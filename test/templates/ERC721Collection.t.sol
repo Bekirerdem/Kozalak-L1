@@ -498,5 +498,4 @@ contract ERC721CollectionTest is Test {
 /// @dev `receive`/`fallback` olmayan kontrat — withdraw target reddi senaryosu için.
 contract RejectingReceiver {
     // no receive/fallback → ETH transfer fails
-
-    }
+}
