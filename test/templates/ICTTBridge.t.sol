@@ -73,7 +73,7 @@ contract ICTTBridgeSmokeTest is Test {
         vm.mockCall(
             WARP_MESSENGER,
             abi.encodeWithSignature("getBlockchainID()"),
-            abi.encode(bytes32(uint256(43113))) // sembolik — Fuji chain ID
+            abi.encode(bytes32(uint256(43_113))) // sembolik — Fuji chain ID
         );
     }
 
@@ -131,8 +131,7 @@ contract ICTTBridgeSmokeTest is Test {
     }
 
     function test_KozaTokenRemote_DeploysWithValidParams() public {
-        KozaTokenRemote remote =
-            new KozaTokenRemote(_defaultRemoteSettings(), "Wrapped Koza Gas", "wKGAS", 18);
+        KozaTokenRemote remote = new KozaTokenRemote(_defaultRemoteSettings(), "Wrapped Koza Gas", "wKGAS", 18);
 
         assertEq(remote.name(), "Wrapped Koza Gas");
         assertEq(remote.symbol(), "wKGAS");

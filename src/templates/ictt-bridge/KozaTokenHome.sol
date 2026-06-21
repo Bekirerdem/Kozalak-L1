@@ -52,12 +52,6 @@ contract KozaTokenHome is ERC20TokenHome {
         address tokenAddress,
         uint8 tokenDecimals
     )
-        ERC20TokenHome(
-            teleporterRegistryAddress,
-            teleporterManager,
-            minTeleporterVersion,
-            tokenAddress,
-            tokenDecimals
-        )
+        ERC20TokenHome(teleporterRegistryAddress, teleporterManager, minTeleporterVersion, tokenAddress, tokenDecimals)
     {}
 }

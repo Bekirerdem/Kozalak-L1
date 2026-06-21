@@ -59,5 +59,7 @@ contract KozaTokenRemote is ERC20TokenRemote {
         string memory tokenName,
         string memory tokenSymbol,
         uint8 tokenDecimals
-    ) ERC20TokenRemote(settings, tokenName, tokenSymbol, tokenDecimals) {}
+    )
+        ERC20TokenRemote(settings, tokenName, tokenSymbol, tokenDecimals)
+    {}
 }

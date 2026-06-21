@@ -60,14 +60,10 @@ contract DeployTokenHome is Script {
         address broadcaster = _resolveBroadcaster();
         address teleporterManager = vm.envOr("HOME_TELEPORTER_MANAGER", broadcaster);
 
-        return deploy(
-            teleporterRegistry,
-            teleporterManager,
-            minTeleporterVersion,
-            tokenAddress,
-            tokenDecimals,
-            broadcaster
-        );
+        return
+            deploy(
+                teleporterRegistry, teleporterManager, minTeleporterVersion, tokenAddress, tokenDecimals, broadcaster
+            );
     }
 
     /// @notice Test-friendly entry point. Parametrik, env'e dokunmaz.
@@ -87,9 +83,8 @@ contract DeployTokenHome is Script {
         );
 
         vm.startBroadcast();
-        home = new KozaTokenHome(
-            teleporterRegistry, teleporterManager, minTeleporterVersion, tokenAddress, tokenDecimals
-        );
+        home =
+            new KozaTokenHome(teleporterRegistry, teleporterManager, minTeleporterVersion, tokenAddress, tokenDecimals);
         vm.stopBroadcast();
 
         deployer = broadcaster;
