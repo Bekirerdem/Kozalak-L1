@@ -153,10 +153,17 @@ miktar bozulması.
 
 ---
 
-## Adım Adım Deploy (Sprint 3G ön rehber)
+## Adım Adım Deploy
 
-> Bu bölüm **Phase 1 Sprint 3G**'nin live deploy adımlarını özetler. Tam akış
-> için `tasks/PHASE-1-PLAN.md` Sprint 3G bölümüne bakın.
+> **✅ Uçtan uca doğrulandı (v0.3.1, 2026-06-22).** Gerçek transfer kanıtı (tüm
+> tx hash'leri) için `ictt-demo-kanit.md`'ye, tek komutla yeniden üretmek için
+> `scripts/demo/run-ictt-demo.sh`'a bakın.
+>
+> **Önemli mimari notu:** Remote, **Fuji'ye gerçek bir sovereign L1** olarak
+> deploy edilir (`avalanche blockchain deploy <l1> --fuji --use-local-machine`),
+> yerel network'e DEĞİL. Yerel network ile Fuji ayrı P-Chain'lere sahiptir;
+> yerel bir L1, Fuji C-Chain'in Warp imzalarını doğrulayamaz → cross-network ICM
+> çalışmaz. Home ve Remote aynı primary network'te (Fuji) olmalıdır.
 
 ### Önkoşullar
 
@@ -282,6 +289,34 @@ yaz.
 **Sebep:** Home decimals 18, Remote decimals 6 ama parametrede 18 verildi.
 **Çözüm:** `tokenHomeDecimals` ZORUNLU olarak Home tarafındaki gerçek değeri
 yansıtmalı. KGAS (Sprint 1) 18, wKGAS Remote 18 → uyumlu.
+
+### `forge script` deploy'da `EvmError: StackUnderflow`
+**Sebep:** `forge script`/`forge test` kontrat kodunu forge'un LOCAL EVM'inde
+çalıştırır; Subnet-EVM'e özel Warp precompile (`0x0200…05`) orada yoktur, ICTT
+constructor onu çağırınca stack hatası verir.
+**Çözüm:** Remote'u `forge create` ile deploy et — constructor doğrudan hedef
+zincirde (Warp precompile mevcut) çalışır. Smoke test'ler precompile'ı
+`vm.etch + vm.mockCall` ile mock'lar.
+
+### Relayer başlamıyor: `unknown flag: --config`
+**Sebep:** `icm-relayer` binary flag'i `--config-file`'dır, `--config` değil.
+**Çözüm:** `icm-relayer --config-file <path>`. Relayer'ı oturum boyunca canlı
+tutmak için kendi terminalinizde veya `nohup` ile çalıştırın (komut bitince
+child process SIGHUP alıp ölebilir).
+
+### Relayer: `nonce too low: next nonce N, tx nonce N-1`
+**Sebep:** Relayer mesaj teslimi için bir EOA key kullanır (deploy'da `--key`).
+Aynı key'le manuel tx (deploy/register/send) gönderirseniz nonce ilerler,
+relayer'ın cache'i geride kalır.
+**Çözüm:** Relayer'ı fresh başlatın (nonce'u zincirden alır) ve relay sürerken
+o key ile manuel tx GÖNDERMEYİN. Mümkünse relayer'a ayrı, fonlu bir key verin.
+
+### Deploy: `can't airdrop to default address on public networks`
+**Sebep:** Genesis alloc'unda well-known test adresi (ewoq vb.) airdrop'u var;
+Fuji/mainnet bunu reddeder.
+**Çözüm:** `avalanche blockchain create <l1> --force --genesis <dosya>` ile
+genesis'i yalnızca kendi deployer adresinize airdrop yapacak şekilde düzenleyin
+(validator manager precompile'larını ve `warpConfig`'i koruyun).
 
 ---
 

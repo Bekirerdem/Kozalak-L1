@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] — 2026-06-22
+
+ICTT Cross-L1 Bridge **uçtan uca canlı doğrulandı.** v0.3.0'da kontratlar
+canlıydı ama relayer kurulmadığı için gerçek transfer tamamlanmamıştı; bu
+sürüm KGAS lock → `icm-relayer` → wKGAS mint zincirini on-chain kanıtlar.
+
+### Mimari Düzeltme
+
+v0.3.0 "Fuji C-Chain Home → **yerel** L1 Remote" varsayıyordu. Bu mimari
+**çalışmaz**: yerel network ile Fuji ayrı P-Chain'lere sahiptir, yerel L1
+Fuji'nin Warp imzalarını doğrulayamaz. v0.3.1'de Remote, **Fuji'ye gerçek bir
+sovereign L1** olarak deploy edildi (`--use-local-machine`, validator local
+makinede) — Home (Fuji C-Chain) ve Remote (Fuji L1) aynı primary network'te,
+ICM çalışıyor. `requirePrimaryNetworkSigners=true` sayesinde L1, Fuji primary
+network imzalı mesajları kabul eder.
+
+### Uçtan Uca Transfer Kanıtı (Fuji)
+
+- **Remote (wKGAS):** `KozaTokenRemote` at `0x0c4476E8D1d140B303E08aa75a0AbD44Ff202bb1`
+  (Fuji L1 `kozaTestL1`, blockchain ID `iq2dnsHr4T9FG39r3Fkho3H8B2V31BdnkxHCnCVZNvbHCiSQE`).
+  v0.3.0'daki `0x53c10844…` adresi geçersizdir (yerel state kayboldu).
+- **`Home.send` (10 KGAS lock):** `0xb74ce3d8efcc46745466b3df4b87ac6452029a23aa69b8ce99b8d41f501c8bf4`
+- **Sonuç:** Fuji L1'de `balanceOf = totalSupply = 10000000000000000000` (10 wKGAS) ✅
+- Tam kanıt zinciri + tüm tx hash'leri: `docs/tr/03-templateler/ictt-demo-kanit.md`
+
+### Added
+
+- `scripts/demo/run-ictt-demo.sh` — uçtan uca demoyu yeniden üreten orchestration
+  script (relayer → Remote deploy → register → transfer → mint doğrula).
+- `docs/tr/03-templateler/ictt-demo-kanit.md` — canlı transfer kanıt dokümanı.
+
+### Notes
+
+- Relayer için: `icm-relayer` flag'i `--config-file`'dır; relayer deployer key
+  kullanır, relay sırasında manuel tx göndermek nonce çakışması yaratır.
+- Subnet-EVM precompile'a bağımlı kontratlar `forge create` ile deploy edilmeli
+  (`forge script` local EVM'de Warp precompile'ı bulamaz → StackUnderflow).
+
 ## [0.3.0] — 2026-04-30
 
 Third template release: ICTT Cross-L1 Bridge (`KozaTokenHome` /
