@@ -263,6 +263,17 @@ relayer otomatik başlar.** Production'da `icm-relayer` ayrı bir Go binary olar
 **Sebep:** `registerWithHome` çağrılmadan `send()` denendi.
 **Çözüm:** Adım 6'yı çalıştır.
 
+### Geri dönüş (Remote→Home) burn'de `ERC20InsufficientAllowance`
+**Sebep:** wKGAS'ı geri göndermek için `Remote.send()` çağrıldı ama
+`Remote._burn` → `_spendAllowance(sender, address(this), amount)` adımı
+allowance bulamadı. İleri yönde KGAS'ı **Home'a** approve ediyorduk; geri yönde
+wKGAS, **Remote kontratının kendisine** approve edilmeli.
+**Çözüm:** Burn'den önce
+`cast send $REMOTE "approve(address,uint256)" $REMOTE <amount>`. `send` input'unda
+`destinationBlockchainID` = Home'un chain'i (Fuji C-Chain), `destinationTokenTransferrerAddress`
+= Home adresi olmalı (`input.destinationBlockchainID == tokenHomeBlockchainID` ise
+single-hop Home'a gider).
+
 ### "Insufficient teleporter version"
 **Sebep:** `minTeleporterVersion` registry'deki latest'tan büyük veya çok
 düşük. Versiyon mismatch.

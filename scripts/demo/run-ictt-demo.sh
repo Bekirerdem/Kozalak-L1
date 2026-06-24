@@ -2,7 +2,8 @@
 #
 # run-ictt-demo.sh — ICTT uçtan uca köprü demosu (yeniden üretilebilir)
 #
-# Senaryo: Fuji C-Chain'de KGAS lock → icm-relayer → Fuji L1'de wKGAS mint.
+# Senaryo: (ileri) Fuji C-Chain KGAS lock → icm-relayer → Fuji L1 wKGAS mint;
+#          (geri)  Fuji L1 wKGAS burn → icm-relayer → Fuji C-Chain KGAS unlock.
 # Her iki uç da Fuji primary network'te (yerel↔Fuji ICM ÇALIŞMAZ — ayrı P-Chain).
 #
 # ÖN KOŞULLAR (bir kez, manuel — bkz. docs/tr/03-templateler/ictt-bridge.md):
@@ -19,7 +20,7 @@
 #        REMOTE_TELEPORTER_REGISTRY, REMOTE_TOKEN_HOME_BLOCKCHAIN_ID, REMOTE_TOKEN_HOME_ADDRESS
 #
 # Bu script ön koşullar sağlandıktan sonra akışı otomatikleştirir:
-#   relayer başlat → Remote deploy → register → transfer → mint doğrula.
+#   relayer başlat → Remote deploy → register → transfer → mint doğrula → round-trip.
 #
 set -euo pipefail
 
@@ -50,18 +51,18 @@ echo "  L1 RPC:      $L1_RPC"
 # NOT: relayer deployer key kullanır; bu script çalışırken BAŞKA manuel tx gönderme
 #      (nonce çakışması). icm-relayer flag'i --config-file'dır (--config DEĞİL).
 if ! pgrep -f "icm-relayer --config-file" >/dev/null; then
-  echo "[1/5] Relayer başlatılıyor (nohup, kalıcı)..."
+  echo "[1/6] Relayer başlatılıyor (nohup, kalıcı)..."
   nohup "$RELAYER_BIN" --config-file "$RELAYER_CFG" > "$HOME/koza-relayer.log" 2>&1 &
   sleep 8
 else
-  echo "[1/5] Relayer zaten çalışıyor."
+  echo "[1/6] Relayer zaten çalışıyor."
 fi
 pgrep -f "icm-relayer --config-file" >/dev/null || { echo "HATA: relayer başlamadı"; exit 1; }
 
 # --- 2) Remote (wKGAS) deploy (yoksa) — forge create, Warp precompile için ---
 REMOTE_ADDR=$(grep -E "^REMOTE_ADDRESS=" .env 2>/dev/null | cut -d= -f2- | tr -d '\r\n ' || true)
 if [ -z "${REMOTE_ADDR:-}" ] || [ "$(cast code "$REMOTE_ADDR" --rpc-url "$L1_RPC" 2>/dev/null)" = "0x" ]; then
-  echo "[2/5] KozaTokenRemote deploy ediliyor (forge create)..."
+  echo "[2/6]KozaTokenRemote deploy ediliyor (forge create)..."
   REMOTE_ADDR=$(forge create src/templates/ictt-bridge/KozaTokenRemote.sol:KozaTokenRemote \
     --rpc-url "$L1_RPC" --private-key "$PRIVATE_KEY" --broadcast --evm-version cancun \
     --constructor-args "($REMOTE_REGISTRY,$DEPLOYER,1,$HOME_BID,$HOME_ADDR,18)" \
@@ -69,7 +70,7 @@ if [ -z "${REMOTE_ADDR:-}" ] || [ "$(cast code "$REMOTE_ADDR" --rpc-url "$L1_RPC
   echo "  Remote: $REMOTE_ADDR"
   grep -q "^REMOTE_ADDRESS=" .env && sed -i "s|^REMOTE_ADDRESS=.*|REMOTE_ADDRESS=$REMOTE_ADDR|" .env || printf 'REMOTE_ADDRESS=%s\n' "$REMOTE_ADDR" >> .env
 else
-  echo "[2/5] Remote zaten deploy: $REMOTE_ADDR"
+  echo "[2/6]Remote zaten deploy: $REMOTE_ADDR"
 fi
 
 # Remote'un blockchain ID'si (register/transfer destination)
@@ -77,7 +78,7 @@ REMOTE_BID=$(cast call "$REMOTE_REGISTRY" "getBlockchainID()(bytes32)" --rpc-url
 [ -n "$REMOTE_BID" ] || { echo "HATA: Remote blockchain ID alınamadı"; exit 1; }
 
 # --- 3) registerWithHome (relayer Fuji C-Chain'e taşır) ---
-echo "[3/5] registerWithHome..."
+echo "[3/6] registerWithHome..."
 cast send "$REMOTE_ADDR" "registerWithHome((address,uint256))" \
   "(0x0000000000000000000000000000000000000000,0)" \
   --rpc-url "$L1_RPC" --private-key "$PRIVATE_KEY" --gas-limit 500000 >/dev/null
@@ -85,7 +86,7 @@ echo "  Register mesajı yayımlandı, relayer taşıyor (bekleniyor)..."
 sleep 25
 
 # --- 4) Transfer: Fuji C-Chain KGAS lock → Home.send ---
-echo "[4/5] Transfer: $((AMOUNT / 1000000000000000000)) KGAS lock..."
+echo "[4/6] Transfer: $((AMOUNT / 1000000000000000000)) KGAS lock..."
 cast send "$KGAS" "approve(address,uint256)" "$HOME_ADDR" "$AMOUNT" \
   --rpc-url "$FUJI_RPC" --private-key "$PRIVATE_KEY" >/dev/null
 cast send "$HOME_ADDR" \
@@ -94,18 +95,45 @@ cast send "$HOME_ADDR" \
   "$AMOUNT" --rpc-url "$FUJI_RPC" --private-key "$PRIVATE_KEY" >/dev/null
 echo "  Home.send gönderildi, relayer Fuji L1'e taşıyor..."
 
-# --- 5) wKGAS mint doğrula (başarı kriteri: balanceOf > 0) ---
-echo "[5/5] wKGAS mint doğrulanıyor (relayer signature aggregation ~1-2 dk)..."
+# --- 5) wKGAS mint doğrula (ileri yön başarı kriteri: balanceOf > 0) ---
+echo "[5/6] wKGAS mint doğrulanıyor (relayer signature aggregation ~1-2 dk)..."
 for i in $(seq 1 60); do
   BAL=$(cast call "$REMOTE_ADDR" "balanceOf(address)(uint256)" "$DEPLOYER" --rpc-url "$L1_RPC" 2>/dev/null | grep -oE "^[0-9]+")
   if [ -n "$BAL" ] && [ "$BAL" != "0" ]; then
     echo ""
-    echo "✅ BAŞARILI! Fuji L1'de wKGAS mint edildi:"
-    echo "   balanceOf($DEPLOYER) = $BAL wei"
-    echo "   totalSupply = $(cast call "$REMOTE_ADDR" "totalSupply()(uint256)" --rpc-url "$L1_RPC" | grep -oE '^[0-9]+')"
+    echo "✅ İLERİ YÖN: Fuji L1'de wKGAS mint edildi (balanceOf=$BAL wei)."
+    break
+  fi
+  sleep 3
+done
+if [ -z "${BAL:-}" ] || [ "$BAL" = "0" ]; then
+  echo "⏳ Mint 180s içinde görülmedi — relayer log: ~/koza-relayer.log"
+  exit 1
+fi
+
+# --- 6) Round-trip: Fuji L1'de wKGAS BURN → relayer → Fuji C-Chain KGAS unlock ---
+# Burn ön koşulu (ileri yönde YOKTU): Remote._burn, _spendAllowance(sender,
+# address(this)) çağırır → wKGAS, Remote'un KENDİSİNE approve edilmeli.
+echo "[6/6] Round-trip: $((BAL / 1000000000000000000)) wKGAS burn → Fuji KGAS unlock..."
+B0=$(cast call "$KGAS" "balanceOf(address)(uint256)" "$DEPLOYER" --rpc-url "$FUJI_RPC" | grep -oE "^[0-9]+")
+cast send "$REMOTE_ADDR" "approve(address,uint256)" "$REMOTE_ADDR" "$BAL" \
+  --rpc-url "$L1_RPC" --private-key "$PRIVATE_KEY" >/dev/null
+# destinationBlockchainID = Home'un chain'i (Fuji C-Chain) → single-hop Home'a gider.
+cast send "$REMOTE_ADDR" \
+  "send((bytes32,address,address,address,uint256,uint256,uint256,address),uint256)" \
+  "($HOME_BID,$HOME_ADDR,$DEPLOYER,0x0000000000000000000000000000000000000000,0,0,350000,0x0000000000000000000000000000000000000000)" \
+  "$BAL" --rpc-url "$L1_RPC" --private-key "$PRIVATE_KEY" >/dev/null
+echo "  wKGAS burn gönderildi, relayer Fuji C-Chain'e taşıyor (KGAS unlock)..."
+for i in $(seq 1 60); do
+  KBAL=$(cast call "$KGAS" "balanceOf(address)(uint256)" "$DEPLOYER" --rpc-url "$FUJI_RPC" 2>/dev/null | grep -oE "^[0-9]+")
+  if [ -n "$KBAL" ] && [ "$KBAL" -gt "$B0" ] 2>/dev/null; then
+    echo ""
+    echo "✅ ROUND-TRIP BAŞARILI! Fuji C-Chain'de KGAS unlock edildi:"
+    echo "   KGAS.balanceOf($DEPLOYER): $B0 → $KBAL"
+    echo "   L1 wKGAS totalSupply = $(cast call "$REMOTE_ADDR" "totalSupply()(uint256)" --rpc-url "$L1_RPC" | grep -oE '^[0-9]+') (burn tamam)"
     exit 0
   fi
   sleep 3
 done
-echo "⏳ Mint 180s içinde görülmedi — relayer log: ~/koza-relayer.log"
+echo "⏳ Unlock 180s içinde görülmedi — relayer log: ~/koza-relayer.log"
 exit 1

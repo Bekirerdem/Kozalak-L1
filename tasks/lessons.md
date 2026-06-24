@@ -135,3 +135,31 @@ function setUp() public {
 **Çözüm:** Minimal `MockTeleporterRegistry` kontratı yazıldı (3 fonksiyon: `latestVersion`, `getAddressFromVersion`, `getLatestTeleporter`, `getVersionFromAddress`). `__TeleporterRegistryApp_init`'in zero-check + version-compare adımlarını geçmek için yeterli yüzey.
 
 **Genel kural:** Wrapper kontratlar için **library logic'ini test etme**. Sadece kendi katmanını (constructor forwarding, access control eklemeleri) test et. Library zaten denetlenmiş.
+
+## 2026-06-24 (ICTT round-trip / geri dönüş)
+
+### Yerel L1'i yeniden ayağa kaldırmak: `node local start`, `blockchain deploy` DEĞİL
+
+**Problem:** Makine/WSL kapanınca yerel L1 validator düşer (RPC reddedilir). Yeniden başlatmak için refleksif olarak `avalanche blockchain deploy kozaTestL1 --fuji ...` çağrıldı; komut **"A local machine L1 deploy already exists … overwrite?"** interaktif ok-menüsü sordu, non-interactive WSL'de stdin EOF (`^D`) ile patladı. Bypass eden bir flag de yok (`--overwrite`/`--force` mevcut değil).
+
+**Çözüm:** Subnet + blockchain Fuji P-Chain'de **kalıcı** kayıtlı; yalnızca local node process'i ölmüş. Doğru komut: `avalanche node local status` (cluster `Stopped` mı gör) → `avalanche node local start <clusterName>`. Bu, node'u disk state'iyle yeniden açar — blockchain'i yeniden *create* etmeye gerek yok ve **EVM disk state korunur**: eski Remote contract + mint'ler geri gelir (redeploy/yeniden transfer gereksiz).
+
+**Genel kural:** "L1 düştü" ≠ "blockchain gitti". Önce `node local status`; restart için `node local start`. `blockchain deploy` yalnızca ilk kurulum/gerçekten yeniden oluşturma içindir.
+
+### Geri dönüş (Remote→Home) burn'de wKGAS **self-approve** şart
+
+**Problem:** İleri yönde KGAS'ı **Home'a** approve ediyorduk; geri dönüşte aynı refleksle gidilirse `Remote.send` burn `ERC20InsufficientAllowance` verir. `ERC20TokenRemote._burn`, `_spendAllowance(sender, address(this), amount)` çağırır.
+
+**Çözüm:** Burn'den önce wKGAS'ı **Remote kontratının kendisine** approve et: `cast send $REMOTE "approve(address,uint256)" $REMOTE <amount>`. `send` input'unda `destinationBlockchainID == tokenHomeBlockchainID` ise single-hop Home'a gider (unlock).
+
+### Relayer: çift-yön config + `process-missed-blocks:false` + quorum gecikmesi
+
+**Problem:** Round-trip mesajı L1'den (source) çıkar; relayer L1 validator'ına peer bağlanıp Warp quorum (67/100) sağlamadan ve `Listener initialized` demeden burn atılırsa, `process-missed-blocks:false` olduğu için mesaj **kaçar** (relayer geçmiş blokları taramaz).
+
+**Çözüm:** Avalanche CLI relayer config'i zaten çift yön (C-Chain ↔ L1 ikisi de source+destination) kurar. Relayer'ı `nohup` ile başlat, log'da L1 subnet için `connectedWeight=100` + `Initialization complete` görene kadar bekle, **sonra** burn at. Yeni başlayan relayer'da L1 peer handshake'i ~10-30s sürebilir.
+
+### `pgrep -f "<pattern>"` kendi komut satırını yakalar (false positive)
+
+**Problem:** `pgrep -f "icm-relayer --config-file"` ile relayer canlılığı kontrolü, pattern string'i çağıran shell'in komut satırında **birebir geçtiği** için kendini match etti; "zaten çalışıyor" yanlış pozitifi başlatmayı atlattı.
+
+**Çözüm:** Bracket trick — `pgrep -af "[i]cm-relayer"`. Regex `[i]cm` gerçek process'teki `icm`'i bulur ama kendi komut satırındaki `[i]cm`'i bulmaz. Binary path ile (`icm-relayer-v1.7.4/icm-relayer`) eşleştirmek de ayırt edicidir.

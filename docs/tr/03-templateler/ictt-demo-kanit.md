@@ -1,9 +1,12 @@
 # Template 3 — ICTT Uçtan Uca Köprü Demosu (Kanıt)
 
-> **Durum: ✅ UÇTAN UCA DOĞRULANDI** — 2026-06-22
+> **Durum: ✅ ÇİFT YÖN UÇTAN UCA DOĞRULANDI**
 >
-> Fuji C-Chain'de KGAS lock → `icm-relayer` mesajı taşıdı → Fuji L1'de
-> wKGAS **mint** edildi. Başarı kriteri (`balanceOf > 0`) on-chain sağlandı.
+> - **İleri yön** (2026-06-22): Fuji C-Chain'de KGAS `lock` → `icm-relayer` →
+>   Fuji L1'de wKGAS **mint**. Başarı kriteri (`balanceOf > 0`) sağlandı.
+> - **Ters yön / round-trip** (2026-06-24): Fuji L1'de wKGAS `burn` →
+>   `icm-relayer` → Fuji C-Chain'de KGAS **unlock**. Köprünün iki yönü de
+>   on-chain kanıtlandı (v0.3.2).
 
 Bu doküman, `ictt-bridge.md` rehberindeki adımların **gerçekten çalıştığını**
 kanıtlayan canlı transfer kayıtlarını içerir. v0.3.0'da kontratlar canlıydı ama
@@ -57,6 +60,38 @@ Fuji C-Chain (Home, KGAS lock)  ←→  Fuji L1 "kozaTestL1" (Remote, wKGAS mint
 Fuji L1 yerel RPC üzerinden çalıştığı için Remote explorer'da görünmez; bytecode
 + read fonksiyonları (`name=Wrapped Koza Gas`, `symbol=wKGAS`, `decimals=18`) ve
 mint sonrası `totalSupply` on-chain doğrulandı.
+
+## Ters Yön — Round-Trip (L1 → Fuji Geri Dönüş)
+
+> **2026-06-24** — Köprünün geri dönüşü: Fuji L1'de wKGAS `burn` →
+> `icm-relayer` mesajı C-Chain'e taşıdı → Fuji C-Chain'de kilitli KGAS
+> **unlock** edildi (`KozaTokenHome._withdraw` → `safeTransfer`).
+
+Senaryo: İleri yönde mint edilen 10 wKGAS, sahibine (deployer) Fuji'deki
+KGAS'ı geri vermek için yakılır. ICTT muhasebesi: Remote'ta `burn` →
+`Home`'da kilitli teminat `recipient`'a çözülür. Kod yolu audited
+`ava-labs/icm-contracts`'tan gelir (`ERC20TokenRemote.send` →
+`TokenHome._receiveTeleporterMessage` → `_withdraw`).
+
+**Yeni ön koşul (ileri yönde yoktu):** `Remote._burn`,
+`_spendAllowance(sender, address(this), amount)` çağırır. Yani burn'den önce
+wKGAS, **Remote kontratının kendisine** approve edilmelidir:
+`cast send $REMOTE "approve(address,uint256)" $REMOTE <amount>`.
+
+### Ters Yön Kanıt Zinciri (2026-06-24)
+
+| # | İşlem | Tx / Sonuç |
+|---|-------|-----------|
+| 0 | wKGAS self-approve (Remote'a) | `allowance(deployer, Remote) = 10000000000000000000` |
+| 1 | **`Remote.send()` — 10 wKGAS BURN + Warp mesajı (L1)** | `0x9dfad5a2c31b5c5546c7ffcc2947ab80fa333ba430ddd61958b6cbb585023ec5` |
+| 2 | Warp / Teleporter mesaj kimliği | warp `2F57KdCup4ZQbPATnxwirgFciHfh446nBdkSoe2Exai5wJHcAK` · teleporter `2g6jYJxeqoyrXDnUgoBURFekfRKjVD7Hf3GAL7mv6QVp6mZCXv` |
+| 3 | **Relayer** Fuji L1 → Fuji C-Chain mesajı taşıdı | `icm-relayer` "Delivered message to destination chain" |
+| 4 | **KGAS UNLOCK — `Home._withdraw` → `recipient`** | [`0x843772a8f9757d23ce961b703a86573d8dafafff37b1df3f241caabb3106cd22`](https://testnet.snowtrace.io/tx/0x843772a8f9757d23ce961b703a86573d8dafafff37b1df3f241caabb3106cd22) |
+| 5 | Sonuç doğrulama | L1: wKGAS `totalSupply = 0`, `balanceOf(deployer) = 0`; Fuji: `KGAS.balanceOf(deployer)` `99980` → **`99990`** (+10) ✅ |
+
+Unlock tx'i Fuji C-Chain'de yer aldığı için **Snowtrace'te görünür** (yukarıdaki
+link); receipt log'unda `Home` (`0x2b1377…`) `TokensWithdrawn` event'i ve
+`KGAS` `Transfer(Home → deployer, 10e18)` doğrulandı.
 
 ## Yeniden Üretilebilirlik
 
