@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2] — 2026-06-24
+
+ICTT köprüsünün **ters yönü (round-trip) uçtan uca canlı doğrulandı.** v0.3.1
+ileri yönü (KGAS lock → wKGAS mint) kanıtlamıştı; bu sürüm geri dönüşü kapatır:
+Fuji L1'de wKGAS `burn` → `icm-relayer` → Fuji C-Chain'de KGAS `unlock`. Köprünün
+iki yönü de on-chain çalışıyor — Template 3 tam kapanış. Kod değişikliği yok;
+`Remote.send` (burn) ve `Home._withdraw` (unlock) audited `icm-contracts`'tan gelir.
+
+### Round-Trip Kanıtı (Fuji, 2026-06-24)
+
+- **wKGAS BURN (`Remote.send`, L1):** `0x9dfad5a2c31b5c5546c7ffcc2947ab80fa333ba430ddd61958b6cbb585023ec5`
+- **KGAS UNLOCK (`Home._withdraw`, Fuji C-Chain):** [`0x843772a8f9757d23ce961b703a86573d8dafafff37b1df3f241caabb3106cd22`](https://testnet.snowtrace.io/tx/0x843772a8f9757d23ce961b703a86573d8dafafff37b1df3f241caabb3106cd22)
+- **Sonuç:** L1 wKGAS `totalSupply = 0` (burn tamam); Fuji `KGAS.balanceOf(deployer)` `99980` → `99990` (+10 unlock) ✅
+- Tam kanıt zinciri: `docs/tr/03-templateler/ictt-demo-kanit.md` (Ters Yön bölümü)
+
+### Added
+
+- `scripts/demo/run-ictt-demo.sh` — `[6/6]` round-trip adımı (wKGAS self-approve →
+  `Remote.send` burn → Fuji KGAS unlock poll). Tek script artık ileri + geri yönü doğrular.
+
+### Notes
+
+- **Geri dönüş burn ön koşulu:** `Remote._burn` → `_spendAllowance(sender, address(this))`;
+  wKGAS, Remote kontratının **kendisine** approve edilmeli (ileri yönde KGAS Home'a approve ediliyordu).
+- Yerel L1 disk state'i makine yeniden başlatmaları arasında korunur: `avalanche node local start
+  <cluster>` node'u yeniden ayağa kaldırır (blockchain'i yeniden *create* etmeye gerek yok),
+  Remote state + mint'ler geri gelir. `avalanche blockchain deploy` ise "overwrite?" interaktif
+  sorusu sorar — restart için `node local start` tercih edilir.
+- `icm-relayer` config'i çift yön relay eder (C-Chain ↔ L1 ikisi de source+destination);
+  `process-missed-blocks: false` olduğundan burn, relayer L1 quorum'a (67/100) bağlandıktan **sonra** atılmalı.
+
 ## [0.3.1] — 2026-06-22
 
 ICTT Cross-L1 Bridge **uçtan uca canlı doğrulandı.** v0.3.0'da kontratlar
