@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] — 2026-06-25
+
+Phase 1'in 4. template'i: **Soulbound Credential (KozaCredential)** — transfer
+edilemez (account-bound) on-chain sertifika NFT. Issuer-only mint, on-chain
+metadata, revoke-flag. Fuji'de canlı + Routescan verified.
+
+### Live Deployment
+
+**KozaCredential (Fuji C-Chain, 43113):**
+- **Contract:** [`0xCFdE91F214ABDe2a2E65B6cd41A7C7E3244E1ec1`](https://testnet.snowtrace.io/address/0xCFdE91F214ABDe2a2E65B6cd41A7C7E3244E1ec1) — verified
+- İlk sertifika kanıtı: `issue` tx [`0xd1de861d…`](https://testnet.snowtrace.io/tx/0xd1de861db6c309080253d2536a1767c11ee81a3fb2ab87b4e83aa298c2bcbc8d) → `isValid(1)=true`, `transferFrom` revert (soulbound), `tokenURI` on-chain base64 JSON.
+
+### Added
+
+- `src/templates/soulbound-credential/KozaCredential.sol` — account-bound ERC-721 + AccessControl + on-chain metadata + revoke-flag (OZ v5.3+ inherit, ~7.4 KB runtime).
+- `script/deploy/DeployCredential.s.sol` — `run()` (env) / `deploy()` (parametrik) pattern.
+- `test/templates/Soulbound.t.sol` + `Soulbound.invariants.t.sol` + `DeployCredential.t.sol` — 28 test (unit + fuzz 10000 + invariant 100k call + deploy smoke), TDD.
+- `docs/tr/03-templateler/soulbound-credential.md` — Türkçe audit-grade rehber.
+- `docs/superpowers/specs/2026-06-25-soulbound-credential-design.md` — tasarım dokümanı.
+
+### Notes
+
+- **ERC-5114 yerine account-bound:** ERC-5114 rozeti NFT'ye bağlar + revoke yok; eğitim sertifikası "kişiye + issuer revoke" gereksinimine account-bound ERC-721 + revoke-flag oturur.
+- **Soulbound mekanik:** `_update` override — transfer (`from≠0 && to≠0`) → `revert Soulbound()`; `approve` fiilen etkisiz.
+- **Revoke-flag (burn değil):** iptal denetlenebilir; token silinmez, `Status` metadata'ya yansır.
+- **On-chain metadata:** `tokenURI` base64 JSON (`Strings` + `Base64`), IPFS bağımsız.
+
 ## [0.3.2] — 2026-06-24
 
 ICTT köprüsünün **ters yönü (round-trip) uçtan uca canlı doğrulandı.** v0.3.1
