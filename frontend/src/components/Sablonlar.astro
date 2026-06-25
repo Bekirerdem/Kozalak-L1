@@ -39,9 +39,9 @@ const templates: Template[] = [
     {
         number: "03",
         title: "ICTT Cross-L1 Köprü",
-        version: "v0.3.1",
+        version: "v0.3.2",
         status: "live",
-        body: "ava-labs/icm-contracts audited Token Home + Token Remote. Custom bridge yazma riski yok.",
+        body: "ava-labs/icm-contracts audited. Çift yön köprü doğrulandı: lock→mint ve burn→unlock (round-trip).",
         bgClass: "bg-kozalak-red-hot",
         textClass: "text-true-white",
         snowtrace: "https://testnet.snowtrace.io/address/0x2b1377537690793939DC42530c15DA897AC9D2D9",
@@ -51,19 +51,23 @@ const templates: Template[] = [
         number: "04",
         title: "Soulbound Credential",
         version: "v0.4.0",
-        status: "planned",
-        body: "ERC-5114 jenerik eğitim/topluluk sertifikası — non-transferable NFT, issuer-only mint.",
+        status: "live",
+        body: "Account-bound (transfer edilemez) eğitim/topluluk sertifikası. On-chain metadata, issuer-only mint, revoke-flag.",
         bgClass: "bg-kozalak-orange",
         textClass: "text-true-white",
+        snowtrace: "https://testnet.snowtrace.io/address/0xCFdE91F214ABDe2a2E65B6cd41A7C7E3244E1ec1",
+        linkLabel: "Fuji'de incele",
     },
     {
         number: "05",
         title: "Treasury Multisig + Timelock",
         version: "v0.5.0",
-        status: "planned",
-        body: "Safe (Gnosis) uyumlu, OpenZeppelin AccessManager + TimelockController, role-based.",
+        status: "live",
+        body: "OpenZeppelin TimelockController. Rol-bazlı + gecikmeli hazine (DAO fonları), Safe (Gnosis) uyumlu.",
         bgClass: "bg-bg-card-dark",
         textClass: "text-white",
+        snowtrace: "https://testnet.snowtrace.io/address/0x6864879522D70Fb8e1583Cc8Fd4baB0e9605A955",
+        linkLabel: "Fuji'de incele",
     },
 ];
 ---
@@ -77,7 +81,7 @@ const templates: Template[] = [
             </span>
             <span class="flex-1 h-px bg-white/10"></span>
             <span class="text-white/40 text-xs lg:text-sm font-medium">
-                3 / 5 canlı
+                5 / 5 canlı
             </span>
         </div>
 
