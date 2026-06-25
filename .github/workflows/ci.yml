@@ -51,8 +51,9 @@ jobs:
 
       - name: Forge coverage
         if: steps.check_src.outputs.has_contracts == 'true'
-        run: forge coverage --report lcov --report summary
+        run: forge coverage --ir-minimum --report lcov --report summary
         continue-on-error: true
+        timeout-minutes: 15
 
       - name: Upload coverage
         if: steps.check_src.outputs.has_contracts == 'true'

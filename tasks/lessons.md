@@ -163,3 +163,15 @@ function setUp() public {
 **Problem:** `pgrep -f "icm-relayer --config-file"` ile relayer canlılığı kontrolü, pattern string'i çağıran shell'in komut satırında **birebir geçtiği** için kendini match etti; "zaten çalışıyor" yanlış pozitifi başlatmayı atlattı.
 
 **Çözüm:** Bracket trick — `pgrep -af "[i]cm-relayer"`. Regex `[i]cm` gerçek process'teki `icm`'i bulur ama kendi komut satırındaki `[i]cm`'i bulmaz. Binary path ile (`icm-relayer-v1.7.4/icm-relayer`) eşleştirmek de ayırt edicidir.
+
+## 2026-06-25 (CI coverage timeout)
+
+### `forge coverage` büyük inherit (TimelockController) ile job timeout'u aşar
+
+**Problem:** Treasury (OZ `TimelockController` inherit) eklenince `forge coverage` aşırı yavaşladı; testler (fuzz 10000) geçmesine rağmen coverage adımı 30dk job timeout'unu aştı → CI fail (`X Build & Test in 30m16s`, "job exceeded the maximum execution time of 30m0s"). `continue-on-error: true` BİLE kurtarmadı — timeout job-level olduğu için yavaş step job'u öldürür.
+
+**Belirti:** `✓ Forge tests (fuzz 10000)` ama `X Forge coverage` + "exceeded maximum execution time".
+
+**Çözüm:** `forge coverage --ir-minimum` (via-ir minimum optimizer; büyük kontratlarda coverage'ı dramatik hızlandırır + stack-too-deep'i de çözer) + coverage step'ine `timeout-minutes: 15` (güvenlik ağı: bitmezse step kesilir, `continue-on-error` job'u kurtarır). Coverage nice-to-have, asla job'u bloklamamalı.
+
+**Genel kural:** Governance/`TimelockController` gibi büyük audited library inherit eden kontratlarda forge coverage instrumentation patlar. `--ir-minimum` + step-level `timeout-minutes` standart koruma.
