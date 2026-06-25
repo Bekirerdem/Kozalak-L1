@@ -99,7 +99,7 @@ Türk Solidity geliştiricilerinin Avalanche'da kendi blockchain'ini (Sovereign 
 | 2   | **ERC-721 NFT Collection**       | ✅ v0.2.0      | Allowlist (Merkle), royalty (ERC-2981), 3-faz mint (Closed/Allowlist/Public). [Live on Fuji](https://testnet.snowtrace.io/address/0x59347BB4365A18BBd92396Fd138E6cEfcDDb79C9)                                                          |
 | 3   | **ICTT Cross-L1 Köprü**          | ✅ v0.3.2      | `ava-labs/icm-contracts` audited inherit — Token Home ([Fuji C-Chain](https://testnet.snowtrace.io/address/0x2b1377537690793939DC42530c15DA897AC9D2D9)) + Token Remote (Fuji L1). **Çift yön uçtan uca doğrulandı:** KGAS lock→wKGAS mint **+** wKGAS burn→KGAS unlock (round-trip) ([kanıt](docs/tr/03-templateler/ictt-demo-kanit.md)), tek komutla tekrarlanabilir (`scripts/demo/run-ictt-demo.sh`) |
 | 4   | **Soulbound Credential**         | ✅ v0.4.0      | Account-bound ERC-721 + `AccessControl` + on-chain metadata + revoke-flag — devredilemez eğitim/topluluk sertifikası, issuer-only mint. [Live on Fuji](https://testnet.snowtrace.io/address/0xCFdE91F214ABDe2a2E65B6cd41A7C7E3244E1ec1) ([rehber](docs/tr/03-templateler/soulbound-credential.md))                                                          |
-| 5   | **Treasury Multisig + Timelock** | ⏳ Planlanıyor | Safe-uyumlu, `AccessManager`, role-based                                                                                                                                                                                               |
+| 5   | **Treasury Multisig + Timelock** | ✅ v0.5.0      | OZ `TimelockController` ince wrapper — rol-bazlı + 48h gecikmeli hazine (DAO fonları), Safe-uyumlu. [Live on Fuji](https://testnet.snowtrace.io/address/0x6864879522D70Fb8e1583Cc8Fd4baB0e9605A955) ([rehber](docs/tr/03-templateler/treasury-multisig.md))                                                                                                                                                                                               |
 
 Her şablon:
 
@@ -163,7 +163,7 @@ forge script script/deploy/DeployERC20Gas.s.sol \
 │  Phase 1 (şu an)     │  Phase 2             │  Phase 3             │
 ├──────────────────────┼──────────────────────┼──────────────────────┤
 │ ✅ Repo + CI setup   │ ⏳ CLI wrapper        │ ⏳ Web dashboard     │
-│ 🚧 5 şablon (3/5 ✅) │ ⏳ Daha fazla şablon  │ ⏳ "1-tıkla deploy"  │
+│ ✅ 5 şablon (5/5 ✅) │ ⏳ Daha fazla şablon  │ ⏳ "1-tıkla deploy"  │
 │ 🚧 Türkçe docs       │ ⏳ Retro9000 başvuru  │ ⏳ Builder Hub PR    │
 │ ✅ Slither/Aderyn CI │ ⏳ Bug bounty live    │ ⏳ Codebase başvuru  │
 │ ⏳ Topluluk pilot    │                      │                      │

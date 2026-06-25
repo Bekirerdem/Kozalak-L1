@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] — 2026-06-25
+
+**Phase 1 TAMAMLANDI** 🎉 — 5/5 audit-grade template Fuji'de canlı + verified.
+Son template: **Treasury Multisig + Timelock (KozaTreasury)** — OZ
+`TimelockController` ince wrapper'ı; DAO/topluluk fonlarını rol-bazlı +
+gecikmeli yürütmeyle korur.
+
+### Live Deployment
+
+**KozaTreasury (Fuji C-Chain, 43113):**
+- **Contract:** [`0x6864879522D70Fb8e1583Cc8Fd4baB0e9605A955`](https://testnet.snowtrace.io/address/0x6864879522D70Fb8e1583Cc8Fd4baB0e9605A955) — verified
+- Canlı kanıt: `schedule` tx [`0x4cf4410c…`](https://testnet.snowtrace.io/tx/0x4cf4410cc57040e44862ef0f45f3dd5a5e02db8eb8add648d4b0e236f1d07dca) → `getMinDelay`=172800 (48h), operation `getOperationState`=1 (Waiting).
+
+### Added
+
+- `src/templates/treasury-multisig/KozaTreasury.sol` — `TimelockController` wrapper (OZ v5.3+, ~5.4 KB runtime).
+- `script/deploy/DeployTreasury.s.sol` — `run()`/`deploy()` pattern (env + parametrik).
+- `test/templates/Treasury.t.sol` + `DeployTreasury.t.sol` — 10 test (schedule/execute delay enforcement, roller, cancel, native fon, open-executor, deploy smoke).
+- `docs/tr/03-templateler/treasury-multisig.md` — Türkçe audit-grade rehber.
+
+### Notes
+
+- **Multisig + timelock:** Safe multisig proposer/executor olarak atanır; öneri çoklu imza + zaman kilidiyle korunur (tek nokta güven yok).
+- **admin = `address(0)` (self-administered) önerilir:** roller yalnız timelock'un kendi gecikmeli önerisiyle değişir.
+- **Phase 1 kapandı:** ERC20 (v0.1) · ERC721 (v0.2) · ICTT çift yön (v0.3.2) · Soulbound (v0.4) · Treasury (v0.5) — hepsi Fuji'de canlı + Routescan verified.
+
 ## [0.4.0] — 2026-06-25
 
 Phase 1'in 4. template'i: **Soulbound Credential (KozaCredential)** — transfer
