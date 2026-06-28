@@ -4,7 +4,7 @@
 interface Phase {
     label: string;
     title: string;
-    status: "active" | "next" | "later";
+    status: "done" | "next" | "later";
     items: { text: string; done: boolean }[];
     bgClass: string;
     accentClass: string;
@@ -12,9 +12,9 @@ interface Phase {
 
 const phases: Phase[] = [
     {
-        label: "Phase 1 (şu an)",
+        label: "Phase 1",
         title: "5 audit-grade şablon",
-        status: "active",
+        status: "done",
         items: [
             { text: "Repo + CI setup", done: true },
             { text: "ERC-20 Gas Token (v0.1.0)", done: true },
@@ -22,34 +22,32 @@ const phases: Phase[] = [
             { text: "ICTT Bridge (v0.3.2, çift yön)", done: true },
             { text: "Soulbound Credential (v0.4.0)", done: true },
             { text: "Treasury Multisig (v0.5.0)", done: true },
-            { text: "EN docs + landing polish", done: false },
+            { text: "Türkçe rehberler (01–05)", done: true },
         ],
         bgClass: "bg-kozalak-red-deep",
         accentClass: "text-true-white",
     },
     {
         label: "Phase 2",
-        title: "CLI + traction",
+        title: "Olgunlaştırma",
         status: "next",
         items: [
-            { text: "CLI wrapper (avax-uyumlu)", done: false },
-            { text: "Daha fazla şablon", done: false },
-            { text: "Retro9000 başvurusu", done: false },
-            { text: "Bug bounty live (Immunefi)", done: false },
-            { text: "Sherlock contest audit", done: false },
+            { text: "Grant başvurusu (Team1 / infraBUIDL)", done: false },
+            { text: "Bug bounty (Immunefi)", done: false },
+            { text: "Opsiyonel audit (Sherlock)", done: false },
         ],
         bgClass: "bg-kozalak-blue-deep",
         accentClass: "text-true-white",
     },
     {
         label: "Phase 3",
-        title: "Web dashboard + dağıtım",
+        title: "Topluluğun eline",
         status: "later",
         items: [
+            { text: "CLI wrapper", done: false },
             { text: "Web dashboard (1-tıkla deploy)", done: false },
-            { text: "Avalanche Builder Hub PR", done: false },
-            { text: "Codebase başvurusu", done: false },
-            { text: "Topluluk pilot programı", done: false },
+            { text: "Daha fazla şablon", done: false },
+            { text: "Builder Hub PR + dağıtım", done: false },
         ],
         bgClass: "bg-bg-card-dark",
         accentClass: "text-white",
@@ -85,13 +83,10 @@ const phases: Phase[] = [
                                 {phase.title}
                             </h3>
                         </div>
-                        {phase.status === "active" && (
+                        {phase.status === "done" && (
                             <span class="inline-flex items-center gap-1.5 text-[0.65rem] font-bold tracking-widest uppercase bg-white/15 px-2 py-1 rounded-full">
-                                <span class="relative flex h-1.5 w-1.5">
-                                    <span class="absolute inline-flex h-full w-full rounded-full bg-white opacity-75 animate-ping" />
-                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
-                                </span>
-                                AKTİF
+                                <span class="inline-flex items-center justify-center h-3.5 w-3.5 rounded-full bg-white/90 text-[0.6rem] text-kozalak-red-deep font-black leading-none">✓</span>
+                                TAMAMLANDI
                             </span>
                         )}
                     </div>
@@ -110,9 +105,9 @@ const phases: Phase[] = [
                     </ul>
 
                     <div class="text-[0.65rem] font-mono tracking-tight opacity-50 pt-4 border-t border-white/10">
-                        {idx === 0 && "v0.1.0 → v0.6.0"}
-                        {idx === 1 && "v0.7.0 → v1.0.0"}
-                        {idx === 2 && "v1.1.0+"}
+                        {idx === 0 && "v0.1.0 → v0.5.0 · tamamlandı"}
+                        {idx === 1 && "olgunlaştırma / hasat"}
+                        {idx === 2 && "katkıya açık"}
                     </div>
                 </article>
             ))}
