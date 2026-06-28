@@ -14,7 +14,7 @@ _Audit-grade Solidity şablonları · Subnet-EVM · ICTT cross-L1 köprü · Tü
 [![Foundry](https://img.shields.io/badge/Foundry-1.5%2B-orange.svg)](https://book.getfoundry.sh)
 [![Built on Avalanche](https://img.shields.io/badge/Built%20on-Avalanche-E84142.svg)](https://www.avax.network)
 [![OpenZeppelin](https://img.shields.io/badge/OpenZeppelin-v5.3+-4E5EE4.svg)](https://www.openzeppelin.com)
-[![Templates Live](https://img.shields.io/badge/Fuji-3%20templates%20live-success?logo=avalanche)](#-şablonlar)
+[![Templates Live](https://img.shields.io/badge/Fuji-5%20templates%20live-success?logo=avalanche)](#-şablonlar)
 
 [Ne Bu](#-ne-bu) · [Mimari](#%EF%B8%8F-mimari) · [Şablonlar](#-şablonlar) · [Hızlı Başlangıç](#-hızlı-başlangıç) · [Niye Avalanche](#-niye-avalanche) · [Yol Haritası](#%EF%B8%8F-yol-haritası) · [Güvenlik](#%EF%B8%8F-güvenlik) · [Katkı](#-katkı)
 
@@ -117,7 +117,7 @@ Her şablon:
 ### Gereksinimler
 
 - [Foundry](https://book.getfoundry.sh/getting-started/installation) (1.5+)
-- Node.js 18+ (frontend için, Phase 3)
+- Node.js 18+ (landing site için — opsiyonel)
 - Fuji testnet AVAX → [faucet.avax.network](https://faucet.avax.network/)
 - _(Opsiyonel)_ [Avalanche CLI](https://docs.avax.network/tooling/avalanche-cli) — custom L1 deploy için
 
@@ -160,15 +160,17 @@ forge script script/deploy/DeployERC20Gas.s.sol \
 
 ```
 ┌──────────────────────┬──────────────────────┬──────────────────────┐
-│  Phase 1 (şu an)     │  Phase 2             │  Phase 3             │
+│  Phase 1 (bitti)     │  Phase 2             │  Phase 3             │
+│  Çekirdek (5/5)      │  Olgunlaştırma       │  Topluluk katkısı    │
 ├──────────────────────┼──────────────────────┼──────────────────────┤
-│ ✅ Repo + CI setup   │ ⏳ CLI wrapper        │ ⏳ Web dashboard     │
-│ ✅ 5 şablon (5/5 ✅) │ ⏳ Daha fazla şablon  │ ⏳ "1-tıkla deploy"  │
-│ 🚧 Türkçe docs       │ ⏳ Retro9000 başvuru  │ ⏳ Builder Hub PR    │
-│ ✅ Slither/Aderyn CI │ ⏳ Bug bounty live    │ ⏳ Codebase başvuru  │
-│ ⏳ Topluluk pilot    │                      │                      │
+│ ✅ Repo + CI setup   │ ⏳ Grant başvurusu   │ ○ CLI wrapper        │
+│ ✅ 5/5 şablon canlı  │ ⏳ Bug bounty        │ ○ Web dashboard      │
+│ ✅ Türkçe docs (1-5) │ ⏳ Opsiyonel audit   │ ○ 1-tıkla deploy     │
+│ ✅ Slither/Aderyn CI │                      │                      │
 └──────────────────────┴──────────────────────┴──────────────────────┘
 ```
+
+**Phase 1 tamamlandı** — 5/5 audit-grade şablon Fuji'de canlı + verified, CI yeşil, Türkçe rehberler (01–05) hazır. Phase 2 = _olgunlaştırma/hasat_: grant başvurusu (Team1 Mini / infraBUIDL), bug bounty, opsiyonel audit. Phase 3 genişlemeleri (CLI, web dashboard) **topluluk katkısına açık** — çekirdek toolkit kendi başına kullanıma hazır.
 
 ---
 
@@ -183,7 +185,7 @@ Tüm şablonlar:
 - ✅ **Slither + Aderyn** statik analiz (CI)
 - ✅ **`ava-labs/icm-contracts`** audited primitive'ler (custom bridge yazılmaz)
 
-> ⚠️ **Bu kod henüz profesyonel audit'ten geçmemiştir.** Production deployment öncesi Sherlock veya Cantina contest planlanıyor (Phase 1 sonu).
+> ⚠️ **Bu kod henüz profesyonel audit'ten geçmemiştir.** Production deployment öncesi Sherlock veya Cantina contest (Phase 2 — olgunlaştırma) opsiyonel olarak planlanıyor.
 
 Güvenlik açığı bildirimi: [`SECURITY.md`](./SECURITY.md)
 
