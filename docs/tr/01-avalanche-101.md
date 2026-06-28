@@ -280,7 +280,7 @@ Avalanche Foundation'ın **resmi TR chapter**'ı (eski adıyla Avalanche Türkiy
 
 1. **Repo'yu clone et:** `git clone github.com/Bekirerdem/Kozalak-L1`
 2. **Template 1 deploy et:** [`docs/tr/03-templateler/erc20-gas.md`](./03-templateler/erc20-gas.md)
-3. **Kendi L1'ini ayağa kaldır:** [`docs/tr/02-l1-deploy.md`](./02-l1-deploy.md) _(yakında)_
+3. **Kendi L1'ini ayağa kaldır:** [`docs/tr/02-l1-deploy.md`](./02-l1-deploy.md)
 4. **Güvenlik checklist'i takip et:** [`docs/tr/04-guvenlik.md`](./04-guvenlik.md)
 
 ---

@@ -180,7 +180,7 @@ avalanche blockchain deploy my-kozalak-l1 --mainnet
 
 ## 📚 Daha Fazla
 
-- Türkçe deployment rehberi: `docs/tr/02-l1-deploy.md` _(Sprint 1F'de gelecek)_
+- Türkçe deployment rehberi: [`docs/tr/02-l1-deploy.md`](../docs/tr/02-l1-deploy.md)
 - Avalanche CLI dokümantasyonu: https://docs.avax.network/tooling/avalanche-cli
 - Subnet-EVM precompile reference: https://github.com/ava-labs/subnet-evm/tree/master/precompile
 - Avalanche9000 (Etna) ACP-77: https://github.com/avalanche-foundation/ACPs/tree/main/ACPs/77-reinventing-subnets
