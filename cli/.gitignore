@@ -2,3 +2,9 @@ node_modules/
 dist/
 *.tsbuildinfo
 coverage/
+
+# Üretilen şablonların forge artefaktları (kaynaklar commit edilir, bunlar edilmez)
+templates/**/lib/
+templates/**/out/
+templates/**/cache/
+templates/**/broadcast/
