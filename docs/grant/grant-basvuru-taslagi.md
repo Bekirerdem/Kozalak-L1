@@ -107,22 +107,23 @@ Aşağıdaki veriler `README.md` ile birebir tutarlıdır (kaynak: bu repo,
 
 ```
 ┌──────────────────────┬──────────────────────┬──────────────────────┐
-│  Phase 1 (bitti)     │  Phase 2 (bu başvuru) │  Phase 3             │
-│  Çekirdek (5/5)      │  Olgunlaştırma        │  Topluluk katkısı    │
+│  Phase 1 (bitti)     │  Phase 2             │  Phase 3             │
+│  Çekirdek (5/5)      │  Olgunlaştırma       │  Topluluk katkısı    │
 ├──────────────────────┼──────────────────────┼──────────────────────┤
-│ ✅ Repo + CI setup   │ ⏳ Grant başvurusu    │ ○ CLI wrapper        │
-│ ✅ 5/5 şablon canlı  │ ✅ Bug bounty politik.│ ○ Web dashboard      │
-│ ✅ Türkçe docs (1-5) │ ⏳ Opsiyonel audit    │ ○ 1-tıkla deploy     │
-│ ✅ Slither/Aderyn CI │                       │                      │
+│ ✅ Repo + CI setup   │ ⏳ Grant başvurusu   │ ○ CLI wrapper        │
+│ ✅ 5/5 şablon canlı  │ ⏳ Bug bounty        │ ○ Web dashboard      │
+│ ✅ Türkçe docs (1-5) │ ⏳ Opsiyonel audit   │ ○ 1-tıkla deploy     │
+│ ✅ Slither/Aderyn CI │                      │                      │
 └──────────────────────┴──────────────────────┴──────────────────────┘
 ```
 
+> **Bu grant başvurusu Phase 2 (olgunlaştırma) kapsamındadır.**
+
 - **Phase 1 — tamamlandı:** 5/5 audit-grade şablon Fuji'de canlı + verified,
   CI yeşil, Türkçe rehberler (01-05) hazır.
-- **Phase 2 — olgunlaştırma (bu grant'in kapsamı):** grant başvurusu (bu
-  doküman), responsible disclosure politikası (tamamlandı), opsiyonel
-  profesyonel audit hazırlığı (Sherlock veya Cantina contest için
-  `docs/grant/audit-hazirlik-checklist.md`).
+- **Phase 2 — olgunlaştırma:** grant başvurusu (bu doküman), responsible
+  disclosure politikası (`SECURITY.md`), opsiyonel profesyonel audit hazırlığı
+  (Sherlock veya Cantina contest için `docs/grant/audit-hazirlik-checklist.md`).
 - **Phase 3 — topluluk katkısına açık:** CLI wrapper
   (`npx create-kozalak-l1` — şablon seç → scaffold → deploy), web dashboard,
   1-tıkla deploy akışı. Çekirdek toolkit Phase 3'ten bağımsız olarak kendi
@@ -150,7 +151,7 @@ kalem, infraBUIDL() için CLI + audit milestone kombinasyonu talep edilebilir).
 | **GitHub** | [@Bekirerdem](https://github.com/Bekirerdem) |
 | **İletişim** | l3ekirerdem@gmail.com |
 | **Rol** | Solo geliştirici — proje sahibi, tüm Solidity şablonları, test paketi, CI/CD ve Türkçe dokümantasyonun yazarı |
-| **Geçmiş** | Avalanche hackathon tecrübesi (ChainBounty, shavaxre), Foundry + Hardhat + ICM + Subnet-EVM ile çalışma geçmişi, Bursa merkezli Koza DAO'nun kurucu üyesi ve Team1 Türkiye ağına bağlı |
+| **Geçmiş** | Avalanche hackathon tecrübesi (ChainBounty, shavaxre), Foundry + Hardhat + ICM + Subnet-EVM ile çalışma geçmişi, Bursa merkezli Koza DAO topluluğundan ve Team1 Türkiye ağına bağlı |
 
 ## 8. Ekler
 
