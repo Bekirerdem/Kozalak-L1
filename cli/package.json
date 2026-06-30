@@ -1,0 +1,25 @@
+{
+  "name": "create-kozalak-l1",
+  "version": "0.1.0",
+  "description": "Avalanche L1 Foundry projesi scaffold + Fuji deploy eden interaktif CLI",
+  "type": "module",
+  "bin": {
+    "create-kozalak-l1": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:templates": "tsx scripts/build-templates.ts",
+    "test": "vitest run",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@clack/prompts": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
+  },
+  "license": "MIT"
+}
