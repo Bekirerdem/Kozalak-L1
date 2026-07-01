@@ -6,6 +6,10 @@
   "bin": {
     "create-kozalak-l1": "dist/index.js"
   },
+  "files": [
+    "dist",
+    "templates"
+  ],
   "scripts": {
     "build": "tsc",
     "build:templates": "tsx scripts/build-templates.ts",
