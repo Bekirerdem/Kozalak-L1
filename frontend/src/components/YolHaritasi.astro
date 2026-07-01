@@ -32,8 +32,10 @@ const phases: Phase[] = [
         title: "Olgunlaştırma",
         status: "next",
         items: [
-            { text: "Grant başvurusu (Team1 / infraBUIDL)", done: false },
-            { text: "Bug bounty (Immunefi)", done: false },
+            { text: "Bug bounty politikası", done: true },
+            { text: "Grant başvuru taslağı", done: true },
+            { text: "Audit hazırlık checklist", done: true },
+            { text: "Grant başvurusu (gönderim)", done: false },
             { text: "Opsiyonel audit (Sherlock)", done: false },
         ],
         bgClass: "bg-kozalak-blue-deep",
@@ -44,10 +46,10 @@ const phases: Phase[] = [
         title: "Topluluğun eline",
         status: "later",
         items: [
-            { text: "CLI wrapper", done: false },
+            { text: "CLI wrapper (create-kozalak-l1)", done: true },
+            { text: "npm publish", done: false },
             { text: "Web dashboard (1-tıkla deploy)", done: false },
             { text: "Daha fazla şablon", done: false },
-            { text: "Builder Hub PR + dağıtım", done: false },
         ],
         bgClass: "bg-bg-card-dark",
         accentClass: "text-white",
@@ -106,8 +108,8 @@ const phases: Phase[] = [
 
                     <div class="text-[0.65rem] font-mono tracking-tight opacity-50 pt-4 border-t border-white/10">
                         {idx === 0 && "v0.1.0 → v0.5.0 · tamamlandı"}
-                        {idx === 1 && "olgunlaştırma / hasat"}
-                        {idx === 2 && "katkıya açık"}
+                        {idx === 1 && "hasat / dokümanlar hazır"}
+                        {idx === 2 && "CLI canlı / npm yakında"}
                     </div>
                 </article>
             ))}
