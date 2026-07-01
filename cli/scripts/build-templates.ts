@@ -321,7 +321,10 @@ function buildTemplate(t: TemplateDef): void {
   writeFileSync(join(outDir, "remappings.txt"), remappingsTxt(t));
   writeFileSync(join(outDir, ".gitmodules"), gitmodules(t));
   writeFileSync(join(outDir, ".env.example"), envExample(t));
-  writeFileSync(join(outDir, ".gitignore"), gitignore());
+  // Noktasız "gitignore" olarak yazılır: npm `.gitignore` dosyalarını pakete
+  // koymaz (gitignore-fallback exclusion). scaffold.ts kopyalama sonrası
+  // bunu `.gitignore`'a rename eder (create-next-app pattern).
+  writeFileSync(join(outDir, "gitignore"), gitignore());
   writeFileSync(join(outDir, "README.md"), readme(t));
 
   const fileCount =

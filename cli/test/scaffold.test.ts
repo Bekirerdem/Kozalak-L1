@@ -17,6 +17,11 @@ describe('scaffold', () => {
     expect(existsSync(join(dir, 'src', 'KozaGasToken.sol'))).toBe(true);
     expect(existsSync(join(dir, 'README.md'))).toBe(true);
     expect(existsSync(join(dir, '.env.example'))).toBe(true);
+    // npm `.gitignore` dosyalarını pakete koymadığı için template'lerde
+    // noktasız "gitignore" taşınır; scaffold sonrası `.gitignore`'a rename
+    // edilmiş olmalı (aksi halde kullanıcı .env'i yanlışlıkla commit edebilir).
+    expect(existsSync(join(dir, '.gitignore'))).toBe(true);
+    expect(existsSync(join(dir, 'gitignore'))).toBe(false);
   });
 
   it('dolu hedef dizinde hata fırlatır', async () => {

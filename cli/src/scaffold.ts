@@ -1,5 +1,5 @@
 import { existsSync, readdirSync } from 'node:fs';
-import { cp, mkdir } from 'node:fs/promises';
+import { cp, mkdir, rename } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { join } from 'node:path';
 import { execFile } from 'node:child_process';
@@ -30,6 +30,14 @@ export async function scaffold(opts: ScaffoldOpts): Promise<void> {
 
   const source = join(templatesRoot(), template.id);
   await cp(source, targetDir, { recursive: true });
+
+  // npm `.gitignore` dosyalarını pakete koymaz (gitignore-fallback), bu yüzden
+  // template'lerde noktasız "gitignore" olarak taşınır. Kullanıcı gerçek bir
+  // `.gitignore` alsın diye burada rename ediyoruz.
+  const gitignoreSrc = join(targetDir, 'gitignore');
+  if (existsSync(gitignoreSrc)) {
+    await rename(gitignoreSrc, join(targetDir, '.gitignore'));
+  }
 
   try {
     await execFileAsync('git', ['init'], { cwd: targetDir });
