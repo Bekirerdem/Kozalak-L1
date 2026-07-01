@@ -16,12 +16,30 @@ export interface DeployInput {
 }
 
 /**
+ * Fuji deploy için forge `script` komutunun argümanlarını üretir.
+ *
+ * `deploy()`'dan ayrıştırılmıştır ki test edilebilsin — forge no-arg
+ * `vm.startBroadcast()` kullanıyor, yani `--private-key` argv'de geçilmezse
+ * forge `PRIVATE_KEY` env var'ından OTOMATİK imzalamaz ve "No associated
+ * wallet" hatasıyla fail eder.
+ */
+export function buildDeployArgs(input: Pick<DeployInput, 'template' | 'privateKey' | 'snowtraceKey'>): string[] {
+  const { template, privateKey, snowtraceKey } = input;
+  const scriptRelPath = join('script', basename(template.deployScript));
+  const args = ['script', scriptRelPath, '--rpc-url', 'fuji', '--broadcast', '--private-key', privateKey];
+  if (snowtraceKey) {
+    args.push('--verify', '--verifier-url', ROUTESCAN_TESTNET_VERIFIER, '--etherscan-api-key', snowtraceKey);
+  }
+  return args;
+}
+
+/**
  * Scaffold edilmiş bir projeyi Fuji testnet'e deploy eder.
  *
  * Sadece `template.deployable === true` olan şablonlar için çalışır (ICTT gibi
  * çok-adımlı şablonlar scaffold-only'dir, burada deploy edilmez).
  *
- * `privateKey` disk'e yazılmaz; yalnızca forge alt-süreci için `process.env`
+ * `privateKey` disk'e yazılmaz; yalnızca forge alt-süreci için argv + `process.env`
  * üzerinden geçirilir.
  */
 export async function deploy(input: DeployInput): Promise<{ address: string | null; explorerUrl: string | null }> {
@@ -34,7 +52,6 @@ export async function deploy(input: DeployInput): Promise<{ address: string | nu
   // Registry'deki deployScript repo-relative bir yol (script/deploy/X.s.sol).
   // Scaffold edilmiş projede yapı flatten edilmiştir (build-templates.ts): script/X.s.sol.
   const scriptFile = basename(template.deployScript);
-  const scriptRelPath = join('script', scriptFile);
 
   const env: NodeJS.ProcessEnv = {
     ...process.env,
@@ -44,10 +61,7 @@ export async function deploy(input: DeployInput): Promise<{ address: string | nu
   };
   if (snowtraceKey) env.SNOWTRACE_API_KEY = snowtraceKey;
 
-  const args = ['script', scriptRelPath, '--rpc-url', 'fuji', '--broadcast'];
-  if (snowtraceKey) {
-    args.push('--verify', '--verifier-url', ROUTESCAN_TESTNET_VERIFIER, '--etherscan-api-key', snowtraceKey);
-  }
+  const args = buildDeployArgs({ template, privateKey, snowtraceKey });
 
   const result = runForge(args, cwd, env);
   if (result.code !== 0) {
