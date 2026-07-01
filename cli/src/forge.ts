@@ -11,9 +11,13 @@ export function forgeAvailable(): boolean {
 }
 
 /** `forge` komutunu verilen çalışma dizininde + ortam değişkenleriyle çalıştırır. */
-export function runForge(args: string[], cwd: string, env: NodeJS.ProcessEnv): { code: number; stdout: string } {
+export function runForge(
+  args: string[],
+  cwd: string,
+  env: NodeJS.ProcessEnv,
+): { code: number; stdout: string; stderr: string } {
   const result = spawnSync('forge', args, { cwd, env, encoding: 'utf8' });
-  return { code: result.status ?? 1, stdout: result.stdout ?? '' };
+  return { code: result.status ?? 1, stdout: result.stdout ?? '', stderr: result.stderr ?? '' };
 }
 
 /** Foundry `broadcast/.../run-latest.json` içeriğinden ilk dolu contractAddress'i çıkarır. */

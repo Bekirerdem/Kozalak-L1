@@ -51,7 +51,9 @@ export async function deploy(input: DeployInput): Promise<{ address: string | nu
 
   const result = runForge(args, cwd, env);
   if (result.code !== 0) {
-    throw new Error(`forge script başarısız oldu (exit ${result.code}):\n${result.stdout}`);
+    // forge compile hatası / revert reason genelde stderr'e yazılır; ikisini de göster.
+    const detail = [result.stdout, result.stderr].filter((s) => s.trim()).join('\n');
+    throw new Error(`forge script başarısız oldu (exit ${result.code}):\n${detail}`);
   }
 
   const broadcastPath = join(cwd, 'broadcast', scriptFile, FUJI_CHAIN_ID, 'run-latest.json');
