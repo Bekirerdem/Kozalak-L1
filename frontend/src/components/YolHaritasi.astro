@@ -30,13 +30,11 @@ const phases: Phase[] = [
     {
         label: "Phase 2",
         title: "Olgunlaştırma",
-        status: "next",
+        status: "done",
         items: [
-            { text: "Bug bounty politikası", done: true },
+            { text: "Bug bounty / responsible disclosure", done: true },
             { text: "Grant başvuru taslağı", done: true },
             { text: "Audit hazırlık checklist", done: true },
-            { text: "Grant başvurusu (gönderim)", done: false },
-            { text: "Opsiyonel audit (Sherlock)", done: false },
         ],
         bgClass: "bg-kozalak-blue-deep",
         accentClass: "text-true-white",
@@ -44,12 +42,12 @@ const phases: Phase[] = [
     {
         label: "Phase 3",
         title: "Topluluğun eline",
-        status: "later",
+        status: "done",
         items: [
-            { text: "CLI wrapper (create-kozalak-l1)", done: true },
-            { text: "npm publish", done: false },
-            { text: "Web dashboard (1-tıkla deploy)", done: false },
-            { text: "Daha fazla şablon", done: false },
+            { text: "create-kozalak-l1 CLI", done: true },
+            { text: "İnteraktif şablon scaffold", done: true },
+            { text: "Fuji deploy + Snowtrace verify", done: true },
+            { text: "5 şablon paketlendi", done: true },
         ],
         bgClass: "bg-bg-card-dark",
         accentClass: "text-white",
@@ -108,8 +106,8 @@ const phases: Phase[] = [
 
                     <div class="text-[0.65rem] font-mono tracking-tight opacity-50 pt-4 border-t border-white/10">
                         {idx === 0 && "v0.1.0 → v0.5.0 · tamamlandı"}
-                        {idx === 1 && "hasat / dokümanlar hazır"}
-                        {idx === 2 && "CLI canlı / npm yakında"}
+                        {idx === 1 && "olgunlaştırma · tamamlandı"}
+                        {idx === 2 && "create-kozalak-l1 · tamamlandı"}
                     </div>
                 </article>
             ))}

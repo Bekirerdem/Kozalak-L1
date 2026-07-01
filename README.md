@@ -160,18 +160,17 @@ forge script script/deploy/DeployERC20Gas.s.sol \
 
 ```
 ┌──────────────────────┬──────────────────────┬──────────────────────┐
-│  Phase 1 (bitti)     │  Phase 2             │  Phase 3             │
-│  Çekirdek (5/5)      │  Olgunlaştırma       │  Topluluk katkısı    │
+│  Phase 1 (bitti)     │  Phase 2 (bitti)     │  Phase 3 (bitti)     │
+│  Çekirdek (5/5)      │  Olgunlaştırma       │  Topluluğun eline    │
 ├──────────────────────┼──────────────────────┼──────────────────────┤
-│ ✅ Repo + CI setup   │ ✅ Bug bounty        │ ✅ CLI wrapper       │
-│ ✅ 5/5 şablon canlı  │ ✅ Grant taslağı     │ ○ npm publish        │
-│ ✅ Türkçe docs (1-5) │ ✅ Audit checklist   │ ○ Web dashboard      │
-│ ✅ Slither/Aderyn CI │ ⏳ Grant başvurusu   │ ○ Daha fazla şablon  │
-│                      │ ⏳ Opsiyonel audit   │                      │
+│ ✅ Repo + CI setup   │ ✅ Bug bounty        │ ✅ create-kozalak-l1 │
+│ ✅ 5/5 şablon canlı  │ ✅ Grant taslağı     │ ✅ Şablon scaffold   │
+│ ✅ Türkçe docs (1-5) │ ✅ Audit checklist   │ ✅ Deploy + verify   │
+│ ✅ Slither/Aderyn CI │                      │ ✅ 5 şablon paketli  │
 └──────────────────────┴──────────────────────┴──────────────────────┘
 ```
 
-**Phase 1 tamamlandı** — 5/5 audit-grade şablon Fuji'de canlı + verified, CI yeşil, Türkçe rehberler (01–05) hazır. Phase 2 = _olgunlaştırma/hasat_: bug bounty politikası, grant başvuru taslağı ve audit hazırlık checklist tamamlandı; grant başvurusunun gönderimi ve opsiyonel audit bekliyor. Phase 3'te CLI wrapper (`create-kozalak-l1`) yazıldı ve lokal kullanıma hazır (npm publish henüz yapılmadı); web dashboard ve ek şablonlar **topluluk katkısına açık**.
+**Üç faz da tamamlandı** — 5/5 audit-grade şablon Fuji'de canlı + verified, CI yeşil, Türkçe rehberler 01–05 hazır (Phase 1); bug bounty / responsible disclosure politikası, grant başvuru taslağı ve audit hazırlık checklist yazıldı (Phase 2); `create-kozalak-l1` CLI ile tek komutla şablon scaffold + Fuji deploy/verify (Phase 3). npm publish, web dashboard ve ek şablonlar isteğe bağlı gelecek genişlemelerdir — **topluluk katkısına açık**.
 
 ---
 
