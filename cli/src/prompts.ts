@@ -28,4 +28,4 @@ export function cancel(msg: string): never {
   process.exit(1);
 }
 
-export { select, text, password, confirm, isCancel } from "@clack/prompts";
+export { select, text, password, confirm, isCancel, note, log } from "@clack/prompts";
