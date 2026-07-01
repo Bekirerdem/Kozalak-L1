@@ -114,6 +114,19 @@ Her şablon:
 
 ## 🚀 Hızlı Başlangıç
 
+### En Hızlı Yol — CLI (önerilen)
+
+Tek komutla şablon seç, hazır Foundry projesi kur, opsiyonel olarak Fuji'ye deploy et:
+
+```bash
+npx create-kozalak-l1 benim-token
+# → şablon seç (ERC-20 / ERC-721 / Soulbound / Treasury / ICTT)
+# → bağımlılıklar kurulur, .env + README hazır
+# → istersen Fuji'ye deploy + Snowtrace verify
+```
+
+[`create-kozalak-l1`](https://www.npmjs.com/package/create-kozalak-l1) npm'de yayında — kurulum gerektirmez.
+
 ### Gereksinimler
 
 - [Foundry](https://book.getfoundry.sh/getting-started/installation) (1.5+)
