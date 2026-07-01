@@ -163,14 +163,15 @@ forge script script/deploy/DeployERC20Gas.s.sol \
 │  Phase 1 (bitti)     │  Phase 2             │  Phase 3             │
 │  Çekirdek (5/5)      │  Olgunlaştırma       │  Topluluk katkısı    │
 ├──────────────────────┼──────────────────────┼──────────────────────┤
-│ ✅ Repo + CI setup   │ ⏳ Grant başvurusu   │ ○ CLI wrapper        │
-│ ✅ 5/5 şablon canlı  │ ⏳ Bug bounty        │ ○ Web dashboard      │
-│ ✅ Türkçe docs (1-5) │ ⏳ Opsiyonel audit   │ ○ 1-tıkla deploy     │
-│ ✅ Slither/Aderyn CI │                      │                      │
+│ ✅ Repo + CI setup   │ ✅ Bug bounty        │ ✅ CLI wrapper       │
+│ ✅ 5/5 şablon canlı  │ ✅ Grant taslağı     │ ○ npm publish        │
+│ ✅ Türkçe docs (1-5) │ ✅ Audit checklist   │ ○ Web dashboard      │
+│ ✅ Slither/Aderyn CI │ ⏳ Grant başvurusu   │ ○ Daha fazla şablon  │
+│                      │ ⏳ Opsiyonel audit   │                      │
 └──────────────────────┴──────────────────────┴──────────────────────┘
 ```
 
-**Phase 1 tamamlandı** — 5/5 audit-grade şablon Fuji'de canlı + verified, CI yeşil, Türkçe rehberler (01–05) hazır. Phase 2 = _olgunlaştırma/hasat_: grant başvurusu (Team1 Mini / infraBUIDL), bug bounty, opsiyonel audit. Phase 3 genişlemeleri (CLI, web dashboard) **topluluk katkısına açık** — çekirdek toolkit kendi başına kullanıma hazır.
+**Phase 1 tamamlandı** — 5/5 audit-grade şablon Fuji'de canlı + verified, CI yeşil, Türkçe rehberler (01–05) hazır. Phase 2 = _olgunlaştırma/hasat_: bug bounty politikası, grant başvuru taslağı ve audit hazırlık checklist tamamlandı; grant başvurusunun gönderimi ve opsiyonel audit bekliyor. Phase 3'te CLI wrapper (`create-kozalak-l1`) yazıldı ve lokal kullanıma hazır (npm publish henüz yapılmadı); web dashboard ve ek şablonlar **topluluk katkısına açık**.
 
 ---
 

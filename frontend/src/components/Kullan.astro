@@ -1,0 +1,83 @@
+---
+// Kullan — CLI tanıtımı: `npx create-kozalak-l1` ile tek komutla L1 projesi.
+
+const adimlar = [
+    { n: "1", text: "Şablon seç — 5 audit-grade şablondan biri (ERC-20, NFT, Soulbound, Treasury, ICTT)." },
+    { n: "2", text: "Proje scaffold edilir — standalone bir Foundry projesi, klasörüyle hazır." },
+    { n: "3", text: "forge install — pinli commit'lerden bağımlılıklar kurulur." },
+    { n: "4", text: "Fuji testnet'e deploy — private key yalnızca bellekte, diske yazılmaz." },
+];
+---
+
+<section id="kullan" class="relative w-full bg-bg-primary text-white py-24 lg:py-32 px-4 lg:px-8">
+    <div class="max-w-[1400px] mx-auto">
+        <!-- Section header -->
+        <div class="flex items-center gap-4 mb-12 lg:mb-16">
+            <span class="font-sans text-xs lg:text-sm font-bold tracking-[0.3em] uppercase text-kozalak-red">
+                03 / Kullan
+            </span>
+            <span class="flex-1 h-px bg-white/10"></span>
+        </div>
+
+        <h2 class="font-sans font-bold leading-[0.95] tracking-tight text-4xl lg:text-[3.5rem] text-white max-w-3xl mb-12 lg:mb-16">
+            Tek komutla <span class="text-kozalak-red">Avalanche L1 projesi</span>.
+        </h2>
+
+        <!-- Asymmetric: terminal mockup (7-col) + adım listesi (5-col) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+            <!-- LEFT: terminal mockup -->
+            <div class="lg:col-span-7 bg-bg-card-dark avax-chamfer-tr p-6 lg:p-8 border border-white/5">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="w-2.5 h-2.5 rounded-full bg-white/15"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-white/15"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-white/15"></span>
+                </div>
+<pre class="font-mono text-xs lg:text-sm leading-relaxed overflow-x-auto"><code><span class="text-kozalak-red">$</span> <span class="text-white">npx create-kozalak-l1 benim-token</span>
+
+<span class="text-white/40">?</span> <span class="text-white/60">Şablon seç:</span> <span class="text-white/90">ERC-20 + Custom Gas Token</span>
+<span class="text-white/40">✓</span> <span class="text-white/70">Proje oluşturuluyor... benim-token/</span>
+<span class="text-white/40">?</span> <span class="text-white/60">Bağımlılıklar kurulsun mu?</span> <span class="text-white/90">Evet</span>
+<span class="text-white/40">✓</span> <span class="text-white/70">forge install — pinli commit'lerden kuruldu</span>
+<span class="text-white/40">?</span> <span class="text-white/60">Fuji testnet'e deploy edilsin mi?</span> <span class="text-white/90">Evet</span>
+<span class="text-white/40">✓</span> <span class="text-white/70">Deploy edildi → Fuji testnet (43113)</span></code></pre>
+
+                <div class="text-[0.65rem] font-mono tracking-tight opacity-50 pt-4 mt-5 border-t border-white/10">
+                    non-interactive mod: --template --yes-install --no-deploy
+                </div>
+            </div>
+
+            <!-- RIGHT: adım listesi + rozet + buton -->
+            <div class="lg:col-span-5 flex flex-col gap-8">
+                <ul class="flex flex-col gap-4">
+                    {adimlar.map((adim) => (
+                        <li class="flex items-start gap-3 text-sm">
+                            <span class="mt-0.5 inline-flex w-5 h-5 items-center justify-center shrink-0 rounded-full bg-white/15 text-white text-[0.65rem] font-bold">
+                                {adim.n}
+                            </span>
+                            <span class="leading-snug text-white/80">
+                                {adim.text}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+
+                <span class="inline-flex items-center gap-1.5 text-[0.65rem] font-bold tracking-widest uppercase bg-white/15 px-2 py-1 rounded-full w-fit">
+                    <span class="inline-flex items-center justify-center h-3.5 w-3.5 rounded-full bg-white/90 text-[0.6rem] text-kozalak-red-deep font-black leading-none">·</span>
+                    YAKINDA NPM'DE
+                </span>
+
+                <a
+                    href="https://github.com/Bekirerdem/Kozalak-L1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center gap-2 rounded-none bg-kozalak-red hover:bg-kozalak-red-hot transition-colors text-true-white font-sans font-bold text-sm tracking-wide uppercase px-6 py-3.5 w-fit"
+                >
+                    GitHub'da incele
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
