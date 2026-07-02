@@ -183,7 +183,7 @@ forge script script/deploy/DeployERC20Gas.s.sol \
 └──────────────────────┴──────────────────────┴──────────────────────┘
 ```
 
-**Üç faz da tamamlandı** — 5/5 audit-grade şablon Fuji'de canlı + verified, CI yeşil, Türkçe rehberler 01–05 hazır (Phase 1); bug bounty / responsible disclosure politikası, grant başvuru taslağı ve audit hazırlık checklist yazıldı (Phase 2); `create-kozalak-l1` CLI ile tek komutla şablon scaffold + Fuji deploy/verify (Phase 3). npm publish, web dashboard ve ek şablonlar isteğe bağlı gelecek genişlemelerdir — **topluluk katkısına açık**.
+**Üç faz da tamamlandı** — 5/5 audit-grade şablon Fuji'de canlı + verified, CI yeşil, Türkçe rehberler 01–05 hazır (Phase 1); bug bounty / responsible disclosure politikası, grant başvuru taslağı ve audit hazırlık checklist yazıldı (Phase 2); `create-kozalak-l1` CLI **npm'de yayında** (`npx create-kozalak-l1`) — tek komutla şablon scaffold + Fuji deploy/verify (Phase 3). Web dashboard ve ek şablonlar isteğe bağlı gelecek genişlemelerdir — **topluluk katkısına açık**.
 
 ---
 
